@@ -1,11 +1,15 @@
+import console from 'node:console'
+import process from 'node:process'
+import { fromTypes, openapi } from '@elysia/openapi'
 import { Elysia } from 'elysia'
-import { openapi, fromTypes } from '@elysia/openapi'
 
 const app = new Elysia()
-	.use( openapi({
-    references: fromTypes() 
-  }))
-	.get("/", () => "Hello World")
-	.listen(process.env.PORT!);
+  .use(
+    openapi({
+      references: fromTypes(),
+    }),
+  )
+  .get('/', () => 'Hello World')
+  .listen(process.env.PORT!)
 
-console.log(`🦊 Kedai POS is running at ${app.server?.hostname}:${app.server?.port}`);
+console.log(`🦊 Kedai POS is running at ${app.server?.hostname}:${app.server?.port}`)
