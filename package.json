@@ -1,8 +1,11 @@
 {
   "name": "kedai-pos",
   "version": "1.0.50",
+  "module": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "dev": "bun run --watch src/index.ts"
   },
   "dependencies": {
@@ -11,8 +14,9 @@
     "pg": "^8.20.0"
   },
   "devDependencies": {
+    "@antfu/eslint-config": "^8.2.0",
     "@types/pg": "^8.20.0",
-    "bun-types": "latest"
-  },
-  "module": "src/index.js"
+    "bun-types": "latest",
+    "eslint": "^10.2.0"
+  }
 }
