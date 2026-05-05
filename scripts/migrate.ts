@@ -1,8 +1,7 @@
 import type { PoolClient } from 'pg'
 import fs from 'node:fs'
 import path from 'node:path'
-import process from 'node:process'
-import { Pool } from 'pg'
+import { getDB } from '@/lib/database'
 
 const MIGRATIONS_DIR = path.join(__dirname, '..', 'migrations')
 
@@ -45,7 +44,8 @@ async function recordMigration(client: PoolClient, filename: string) {
 }
 
 async function migrate() {
-  const db = new Pool({ connectionString: process.env.DATABASE_URL! })
+  const db = getDB()
+
   const client = await db.connect()
 
   try {
