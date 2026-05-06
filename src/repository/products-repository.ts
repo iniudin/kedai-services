@@ -6,19 +6,22 @@ const createProductQuery = `
   INSERT INTO products 
     (
       name,
-      price,
+      cost_price,
+      sell_price,
       is_active
     )
     VALUES (
       $1,
       $2,
+      $3,
       true
     )
   RETURNING 
     id,
     sku,
     name,
-    price,
+    cost_price,
+    sell_price,
     is_active,
     created_at,
     updated_at
@@ -29,7 +32,8 @@ const listProductsQuery = `
     id,
     sku,
     name,
-    price,
+    cost_price,
+    sell_price,
     is_active,
     created_at,
     updated_at
@@ -43,7 +47,8 @@ const findProductByIdQuery = `
     id,
     sku,
     name,
-    price,
+    cost_price,
+    sell_price,
     is_active,
     created_at,
     updated_at
@@ -55,15 +60,17 @@ const updateProductQuery = `
   UPDATE products 
     SET 
       name = COALESCE($2, name),
-      price = COALESCE($3, price),
-      is_active = COALESCE($4, is_active),
+      cost_price = COALESCE($4, cost_price),
+      sell_price = COALESCE($3, sell_price),
+      is_active = COALESCE($5, is_active),
       updated_at = NOW()
     WHERE id = $1
   RETURNING 
     id,
     sku,
     name,
-    price,
+    cost_price,
+    sell_price,
     is_active,
     created_at,
     updated_at
@@ -79,14 +86,15 @@ const deleteProductQuery = `
     id,
     sku,
     name,
-    price,
+    cost_price,
+    sell_price,
     is_active,
     created_at,
     updated_at
 `
 
 export async function createProduct(client: DBQueryable, request: CreateProductRequest): Promise<ProductResponse> {
-  const values = [request.name, request.price]
+  const values = [request.name, request.costPrice, request.sellPrice]
   const { rows } = await client.query(createProductQuery, values)
 
   if (!rows[0]) {
@@ -117,7 +125,7 @@ export async function findProductById(client: DBQueryable, id: number): Promise<
 }
 
 export async function updateProduct(client: DBQueryable, id: number, request: UpdateProductRequest): Promise<ProductResponse> {
-  const values = [id, request.name, request.price, request.isActive]
+  const values = [id, request.name, request.costPrice, request.sellPrice]
   const { rows } = await client.query(updateProductQuery, values)
 
   if (!rows[0]) {

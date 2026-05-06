@@ -3,12 +3,13 @@ import type { AddOnResponse, CreateAddOnRequest, UpdateAddOnRequest } from '@/mo
 import { mapAddOnFromDB } from '@/model/add-ons-model'
 
 const createAddOnQuery = `
-  INSERT INTO add_ons (name, price, type)
-    VALUES ($1, $2, $3)
+  INSERT INTO add_ons (name, cost_price, sell_price, type)
+    VALUES ($1, $2, $3, $4)
   RETURNING 
     id,
     name,
-    price,
+    cost_price,
+    sell_price,
     type,
     is_active,
     created_at,
@@ -19,7 +20,8 @@ const listAddOnsQuery = `
   SELECT 
     id,
     name,
-    price,
+    cost_price,
+    sell_price,
     type,
     is_active,
     created_at,
@@ -33,7 +35,8 @@ const findAddOnByIdQuery = `
   SELECT 
     id,
     name,
-    price,
+    cost_price,
+    sell_price,
     type,
     is_active,
     created_at,
@@ -46,15 +49,17 @@ const updateAddOnQuery = `
   UPDATE add_ons 
     SET 
       name = COALESCE($2, name),
-      price = COALESCE($3, price),
-      type = COALESCE($4, type),
-      is_active = COALESCE($5, is_active),
+      cost_price = COALESCE($3, cost_price),
+      sell_price = COALESCE($4, sell_price),
+      type = COALESCE($5, type),
+      is_active = COALESCE($6, is_active),
       updated_at = NOW()
     WHERE id = $1
   RETURNING 
     id,
     name,
-    price,
+    cost_price,
+    sell_price,
     type,
     is_active,
     created_at,
@@ -70,7 +75,8 @@ const deleteAddOnQuery = `
   RETURNING 
     id,
     name,
-    price,
+    cost_price,
+    sell_price,
     type,
     is_active,
     created_at,
@@ -78,7 +84,7 @@ const deleteAddOnQuery = `
 `
 
 export async function createAddOn(client: DBQueryable, request: CreateAddOnRequest): Promise<AddOnResponse> {
-  const values = [request.name, request.price, request.type]
+  const values = [request.name, request.costPrice, request.sellPrice, request.type]
   const { rows } = await client.query(createAddOnQuery, values)
 
   if (!rows[0]) {
@@ -109,7 +115,7 @@ export async function findAddOnById(client: DBQueryable, id: number): Promise<Ad
 }
 
 export async function updateAddOn(client: DBQueryable, id: number, request: UpdateAddOnRequest): Promise<AddOnResponse> {
-  const values = [id, request.name, request.price, request.type, request.isActive]
+  const values = [id, request.name, request.costPrice, request.sellPrice, request.type]
   const { rows } = await client.query(updateAddOnQuery, values)
 
   if (!rows[0]) {
