@@ -6,6 +6,12 @@ export const createProductSchema = t.Object({
   price: t.Number(),
 })
 
+export const updateProductSchema = t.Object({
+  name: t.Optional(t.String()),
+  price: t.Optional(t.Number()),
+  isActive: t.Optional(t.Boolean()),
+})
+
 export const productSchema = t.Object({
   id: t.Number(),
   sku: t.String(),
@@ -19,6 +25,7 @@ export const productSchema = t.Object({
 export const listProductResponseSchema = t.Array(productSchema)
 
 export type CreateProductRequest = ToModel<typeof createProductSchema>
+export type UpdateProductRequest = ToModel<typeof updateProductSchema>
 export type ProductResponse = ToModel<typeof productSchema>
 export type ListProductsResponse = ToModel<typeof listProductResponseSchema>
 
