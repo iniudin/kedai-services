@@ -1,12 +1,20 @@
-import process from 'node:process'
+import type { QueryResult, QueryResultRow } from 'pg'
 import { Pool } from 'pg'
+import { config } from '@/lib/config'
+
+export interface DBQueryable {
+  query: <R extends QueryResultRow = any, I extends any[] = any[]>(
+    queryText: string,
+    values?: I,
+  ) => Promise<QueryResult<R>>
+}
 
 export function getDB() {
   return new Pool({
-    user: process.env.DATABASE_USER,
-    host: process.env.DATABASE_HOST,
-    database: process.env.DATABASE_NAME,
-    password: process.env.DATABASE_PASSWORD,
-    port: Number(process.env.DATABASE_PORT),
+    user: config.database.user,
+    host: config.database.host,
+    database: config.database.database,
+    password: config.database.password,
+    port: config.database.port,
   })
 }
