@@ -1,11 +1,11 @@
+import type { DBQueryable } from '@/lib/database'
+import process from 'node:process'
 import { getDB } from '@/lib/database'
 import { AddOnType } from '@/model/add-ons-model'
 import { createAddOn } from '@/repository/add-ons-repository'
 import { createProduct } from '@/repository/products-repository'
 
-async function seed() {
-  const db = getDB()
-
+async function seed(client: DBQueryable) {
   const products = [
     { name: 'Es Krim Vanilla', price: 12000 },
     { name: 'Es Krim Coklat', price: 12000 },
@@ -37,24 +37,34 @@ async function seed() {
   const createdProducts = []
   for (const product of products) {
     console.log(`Creating product: ${product.name}`)
-    const created = await createProduct(db, product)
+    const created = await createProduct(client, product)
     createdProducts.push(created)
   }
 
   const createdAddOns = []
   for (const addOn of addOns) {
     console.log(`Creating add-on [${addOn.type}]: ${addOn.name}`)
-    const created = await createAddOn(db, addOn)
+    const created = await createAddOn(client, addOn)
     createdAddOns.push(created)
   }
-
-  console.log('Seeding database successfully!')
 }
 
-seed()
-  .then(() => {
-    console.log('Done!')
-  })
-  .catch((error) => {
-    console.error('Error seeding database:', error)
-  })
+(async () => {
+  const db = getDB()
+  const client = await db.connect()
+
+  try {
+    await client.query('BEGIN')
+    await seed(client)
+    await client.query('COMMIT')
+    console.log('Seeding database successfully!')
+  }
+  catch (error) {
+    await client.query('ROLLBACK')
+    console.error('Error seeding database, rolling back...', error)
+    process.exit(1)
+  }
+  finally {
+    client.release()
+  }
+})()
