@@ -43,7 +43,7 @@ async function recordMigration(client: PoolClient, filename: string) {
   await client.query('INSERT INTO _migrations (filename) VALUES ($1)', [filename])
 }
 
-async function migrate() {
+export async function migrate() {
   const db = getDB()
 
   const client = await db.connect()
@@ -77,4 +77,6 @@ async function migrate() {
   }
 }
 
-migrate()
+if (import.meta.main) {
+  migrate()
+}
