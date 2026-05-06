@@ -1,7 +1,8 @@
 import console from 'node:console'
-import process from 'node:process'
 import { fromTypes, openapi } from '@elysia/openapi'
 import { Elysia } from 'elysia'
+import { config } from '@/lib/config'
+import { productsController } from './controller/products-controller'
 
 const app = new Elysia()
   .use(
@@ -10,6 +11,7 @@ const app = new Elysia()
     }),
   )
   .get('/', () => 'Hello World')
-  .listen(process.env.PORT!)
+  .use(productsController)
+  .listen(config.server.port)
 
 console.log(`🦊 Kedai POS is running at ${app.server?.hostname}:${app.server?.port}`)
