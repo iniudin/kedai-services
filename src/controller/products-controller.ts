@@ -1,6 +1,5 @@
 import { Elysia, t } from 'elysia'
 import * as commonModel from '@/model/common-model'
-import { ErrorResponse } from '@/model/common-model'
 import * as productModel from '@/model/products-model'
 import * as productsService from '@/service/products-service'
 
@@ -12,7 +11,7 @@ export const productsController = new Elysia({ prefix: '/products' })
     body: productModel.createProductSchema,
     response: {
       201: productModel.productSchema,
-      500: commonModel.ErrorResponse,
+      500: commonModel.errorResponseSchema,
     },
   })
   .get('', async () => {
@@ -21,7 +20,7 @@ export const productsController = new Elysia({ prefix: '/products' })
   }, {
     response: {
       200: productModel.listProductResponseSchema,
-      500: ErrorResponse,
+      500: commonModel.errorResponseSchema,
     },
   })
   .get(':id', async ({ params: { id } }) => {
@@ -33,7 +32,7 @@ export const productsController = new Elysia({ prefix: '/products' })
     }),
     response: {
       200: productModel.productSchema,
-      500: commonModel.ErrorResponse,
+      500: commonModel.errorResponseSchema,
     },
   })
   .put(':id', async ({ params: { id }, body }) => {
@@ -46,7 +45,7 @@ export const productsController = new Elysia({ prefix: '/products' })
     body: productModel.updateProductSchema,
     response: {
       200: productModel.productSchema,
-      500: commonModel.ErrorResponse,
+      500: commonModel.errorResponseSchema,
     },
   })
   .delete(':id', async ({ params: { id } }) => {
@@ -58,6 +57,6 @@ export const productsController = new Elysia({ prefix: '/products' })
     }),
     response: {
       200: productModel.productSchema,
-      500: commonModel.ErrorResponse,
+      500: commonModel.errorResponseSchema,
     },
   })

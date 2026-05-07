@@ -1,7 +1,6 @@
 import { Elysia, t } from 'elysia'
 import * as addOnsModel from '@/model/add-ons-model'
 import * as commonModel from '@/model/common-model'
-import { ErrorResponse } from '@/model/common-model'
 import * as addOnsService from '@/service/add-ons-service'
 
 export const addOnsController = new Elysia({ prefix: '/add-ons' })
@@ -12,7 +11,7 @@ export const addOnsController = new Elysia({ prefix: '/add-ons' })
     body: addOnsModel.createAddOnSchema,
     response: {
       201: addOnsModel.addOnSchema,
-      500: commonModel.ErrorResponse,
+      500: commonModel.errorResponseSchema,
     },
   })
   .get('', async () => {
@@ -21,7 +20,7 @@ export const addOnsController = new Elysia({ prefix: '/add-ons' })
   }, {
     response: {
       200: addOnsModel.listAddOnResponseSchema,
-      500: ErrorResponse,
+      500: commonModel.errorResponseSchema,
     },
   })
   .get('/:id', async ({ params: { id } }) => {
@@ -33,7 +32,7 @@ export const addOnsController = new Elysia({ prefix: '/add-ons' })
     }),
     response: {
       200: addOnsModel.addOnSchema,
-      500: commonModel.ErrorResponse,
+      500: commonModel.errorResponseSchema,
     },
   })
   .put('/:id', async ({ params: { id }, body }) => {
@@ -46,7 +45,7 @@ export const addOnsController = new Elysia({ prefix: '/add-ons' })
     body: addOnsModel.updateAddOnSchema,
     response: {
       200: addOnsModel.addOnSchema,
-      500: commonModel.ErrorResponse,
+      500: commonModel.errorResponseSchema,
     },
   })
   .delete('/:id', async ({ params: { id } }) => {
@@ -58,6 +57,6 @@ export const addOnsController = new Elysia({ prefix: '/add-ons' })
     }),
     response: {
       200: addOnsModel.addOnSchema,
-      500: commonModel.ErrorResponse,
+      500: commonModel.errorResponseSchema,
     },
   })

@@ -2,7 +2,7 @@ import type { TSchema, UnwrapSchema } from 'elysia'
 
 import { t } from 'elysia'
 
-export const ErrorResponse = t.Object({
+export const errorResponseSchema = t.Object({
   error: t.String(),
 })
 
