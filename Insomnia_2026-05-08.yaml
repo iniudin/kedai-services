@@ -257,6 +257,30 @@ collection:
             insomnia.expect(insomnia.response.code).to.eql(200);
         });
 
+  - url: http://localhost:3000/reports/sales?grouping=THIS_WEEK
+    name: Sales Report (Dashboard)
+    meta:
+      id: req_reports_sales
+      sortKey: 1100
+    method: GET
+    scripts:
+      afterResponse: |+
+        insomnia.test('Check if status is 200', () => {
+            insomnia.expect(insomnia.response.code).to.eql(200);
+        });
+
+  - url: http://localhost:3000/reports/ranks?startDate=2026-05-01&endDate=2026-05-31
+    name: Product Ranks Report
+    meta:
+      id: req_reports_ranks
+      sortKey: 1200
+    method: GET
+    scripts:
+      afterResponse: |+
+        insomnia.test('Check if status is 200', () => {
+            insomnia.expect(insomnia.response.code).to.eql(200);
+        });
+
 cookieJar:
   name: Default Jar
   meta:
