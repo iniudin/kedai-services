@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@elysia/openapi": "^1.4.15",
+    "@sinclair/typebox": "^0.34.49",
     "elysia": "latest",
     "pg": "^8.20.0"
   },

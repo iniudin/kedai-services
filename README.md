@@ -12,6 +12,16 @@ docker compose up --build
 - API → http://localhost:3000
 - OpenAPI docs → http://localhost:3000/openapi
 
+To fill the database with initial sample data (Products & Add-ons), run the seed command:
+```bash
+docker compose run --rm migrate bun run db:seed
+```
+
+## Deployed (Temporary)
+
+- http://43.133.157.135:3000
+- OpenAPI docs → http://43.133.157.135:3000/openapi
+
 ## API Documentation & Testing
 
 ### OpenAPI / Swagger
