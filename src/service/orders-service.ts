@@ -121,9 +121,9 @@ export async function updateOrder(id: number, request: UpdateOrderRequest): Prom
 
   const existingOrder = await ordersRepository.findOrderById(db, id)
 
-  let totalRevenue = existingOrder.totalRevenue
-  let totalNetProfit = existingOrder.totalNetProfit
-  const amountPaid = request.amountPaid ?? existingOrder.amountPaid
+  let totalRevenue = Number(existingOrder.total_revenue)
+  let totalNetProfit = Number(existingOrder.total_net_profit)
+  const amountPaid = request.amountPaid ?? Number(existingOrder.amount_paid)
 
   try {
     await db.query('BEGIN')
