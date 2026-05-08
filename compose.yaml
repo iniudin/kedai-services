@@ -29,7 +29,7 @@ services:
     working_dir: /app
     volumes:
       - .:/app
-    command: ["bun", "run", "db:migrate"]
+    command: ["sh", "-c", "bun install && bun run db:migrate"]
     depends_on:
       db:
         condition: service_healthy

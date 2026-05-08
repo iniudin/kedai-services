@@ -14,7 +14,7 @@ docker compose up --build
 
 To fill the database with initial sample data (Products & Add-ons), run the seed command:
 ```bash
-docker compose run --rm migrate bun run db:seed
+docker compose run --rm migrate sh -c "bun install && bun run db:seed"
 ```
 
 ## Deployed (Temporary)
