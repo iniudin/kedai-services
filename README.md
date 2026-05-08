@@ -34,17 +34,18 @@ Before run command below, make sure you already create database with name `kedai
 ```bash
 bun install
 cp .env.example .env   # then edit DATABASE_HOST / credentials as needed
-bun run migrate
+bun run db:migrate
 bun run dev
 ```
 
 ## Scripts
 
-| Command           | Description                    |
-| ----------------- | ------------------------------ |
-| `bun run dev`     | Start API with watch mode      |
-| `bun run migrate` | Apply pending SQL migrations   |
-| `bun run lint`    | Run ESLint                     |
+| Command              | Description                    |
+| -------------------- | ------------------------------ |
+| `bun run dev`        | Start API with watch mode      |
+| `bun run db:migrate` | Apply pending SQL migrations   |
+| `bun run db:seed`    | Seed the database              |
+| `bun run lint`       | Run ESLint                     |
 
 ## Environment Variables
 
@@ -76,7 +77,7 @@ Migrations live in `migrations/` and are tracked in the `_migrations` table.
 | `order_item_add_ons` | Add-ons applied to an order item     |
 | `payments`           | Payment records per order            |
 
-To create a new migration, add a timestamped `.sql` file in `migrations/` and run `bun run migrate`.
+To create a new migration, add a timestamped `.sql` file in `migrations/` and run `bun run db:migrate`.
 
 ## Project Structure
 
