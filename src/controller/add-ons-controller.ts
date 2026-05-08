@@ -4,9 +4,9 @@ import * as commonModel from '@/model/common-model'
 import * as addOnsService from '@/service/add-ons-service'
 
 export const addOnsController = new Elysia({ prefix: '/add-ons' })
-  .post('', async ({ body }) => {
+  .post('', async ({ body, status }) => {
     const result = await addOnsService.createAddOn(body)
-    return result
+    return status(201, result)
   }, {
     body: addOnsModel.createAddOnSchema,
     response: {
@@ -23,7 +23,7 @@ export const addOnsController = new Elysia({ prefix: '/add-ons' })
       500: commonModel.errorResponseSchema,
     },
   })
-  .get('/:id', async ({ params: { id } }) => {
+  .get(':id', async ({ params: { id } }) => {
     const result = await addOnsService.findAddOnById(id)
     return result
   }, {
@@ -35,7 +35,7 @@ export const addOnsController = new Elysia({ prefix: '/add-ons' })
       500: commonModel.errorResponseSchema,
     },
   })
-  .put('/:id', async ({ params: { id }, body }) => {
+  .put(':id', async ({ params: { id }, body }) => {
     const result = await addOnsService.updateAddOn(id, body)
     return result
   }, {
@@ -48,7 +48,7 @@ export const addOnsController = new Elysia({ prefix: '/add-ons' })
       500: commonModel.errorResponseSchema,
     },
   })
-  .delete('/:id', async ({ params: { id } }) => {
+  .delete(':id', async ({ params: { id } }) => {
     const result = await addOnsService.deleteAddOn(id)
     return result
   }, {

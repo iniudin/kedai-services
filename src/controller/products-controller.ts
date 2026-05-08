@@ -4,9 +4,9 @@ import * as productModel from '@/model/products-model'
 import * as productsService from '@/service/products-service'
 
 export const productsController = new Elysia({ prefix: '/products' })
-  .post('', async ({ body }) => {
+  .post('', async ({ body, status }) => {
     const result = await productsService.createProduct(body)
-    return result
+    return status(201, result)
   }, {
     body: productModel.createProductSchema,
     response: {
