@@ -5,6 +5,7 @@ x-common: &common
     - DATABASE_NAME=${DATABASE_NAME}
     - DATABASE_PORT=${DATABASE_PORT}
     - DATABASE_HOST=db
+    - PORT=3000
 
 services:
   db:
@@ -43,8 +44,6 @@ services:
         condition: service_completed_successfully
     ports:
       - "${PORT}:3000"
-    environment:
-      PORT: "3000"
     <<: *common
 
 volumes:
