@@ -9,6 +9,23 @@ export interface DBQueryable {
   ) => Promise<QueryResult<R>>
 }
 
+export function buildInsertManyQuery(
+  table: string,
+  columns: readonly string[],
+  rowCount: number,
+  returning: string,
+): string {
+  const colCount = columns.length
+  const valueRows: string[] = []
+
+  for (let i = 0; i < rowCount; i++) {
+    const placeholders = columns.map((_, j) => `$${i * colCount + j + 1}`)
+    valueRows.push(`(${placeholders.join(', ')})`)
+  }
+
+  return `INSERT INTO ${table} (${columns.join(', ')}) VALUES ${valueRows.join(', ')} ${returning}`
+}
+
 export function getDB() {
   return new Pool({
     user: config.database.user,
