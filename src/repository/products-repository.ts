@@ -56,13 +56,24 @@ const findProductByIdQuery = `
   WHERE id = $1
 `
 
+const findProductsByIdsQuery = `
+  SELECT 
+    id,
+    name,
+    cost_price,
+    sell_price
+  FROM products
+  WHERE
+    id = ANY($1)
+    AND is_active = true
+`
+
 const updateProductQuery = `
   UPDATE products 
     SET 
       name = COALESCE($2, name),
-      cost_price = COALESCE($4, cost_price),
-      sell_price = COALESCE($3, sell_price),
-      is_active = COALESCE($5, is_active),
+      cost_price = COALESCE($3, cost_price),
+      sell_price = COALESCE($4, sell_price),
       updated_at = NOW()
     WHERE id = $1
   RETURNING 
@@ -122,6 +133,27 @@ export async function findProductById(client: DBQueryable, id: number): Promise<
   }
 
   return mapProductFromDB(rows[0])
+}
+
+export async function findProductsByIds(
+  client: DBQueryable,
+  ids: number[],
+): Promise<Pick<ProductResponse, 'id' | 'name' | 'costPrice' | 'sellPrice'>[]> {
+  if (ids.length === 0) {
+    return []
+  }
+
+  const { rows } = await client.query(findProductsByIdsQuery, [ids])
+  if (!rows[0]) {
+    return []
+  }
+
+  return rows.map(row => ({
+    id: row.id,
+    name: row.name,
+    costPrice: Number(row.cost_price),
+    sellPrice: Number(row.sell_price),
+  }))
 }
 
 export async function updateProduct(client: DBQueryable, id: number, request: UpdateProductRequest): Promise<ProductResponse> {

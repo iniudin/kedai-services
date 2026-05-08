@@ -45,6 +45,19 @@ const findAddOnByIdQuery = `
   WHERE id = $1
 `
 
+const findAddOnsByIdsQuery = `
+  SELECT 
+    id,
+    name,
+    cost_price,
+    sell_price,
+    type
+  FROM add_ons
+  WHERE
+    id = ANY($1)
+    AND is_active = true
+`
+
 const updateAddOnQuery = `
   UPDATE add_ons 
     SET 
@@ -52,7 +65,6 @@ const updateAddOnQuery = `
       cost_price = COALESCE($3, cost_price),
       sell_price = COALESCE($4, sell_price),
       type = COALESCE($5, type),
-      is_active = COALESCE($6, is_active),
       updated_at = NOW()
     WHERE id = $1
   RETURNING 
@@ -65,7 +77,6 @@ const updateAddOnQuery = `
     created_at,
     updated_at
 `
-
 const deleteAddOnQuery = `
   UPDATE add_ons 
     SET 
@@ -112,6 +123,28 @@ export async function findAddOnById(client: DBQueryable, id: number): Promise<Ad
   }
 
   return mapAddOnFromDB(rows[0])
+}
+
+export async function findAddOnsByIds(
+  client: DBQueryable,
+  ids: number[],
+): Promise<Pick<AddOnResponse, 'id' | 'name' | 'costPrice' | 'sellPrice' | 'type'>[]> {
+  if (ids.length === 0) {
+    return []
+  }
+
+  const { rows } = await client.query(findAddOnsByIdsQuery, [ids])
+  if (!rows[0]) {
+    return []
+  }
+
+  return rows.map(row => ({
+    id: row.id,
+    name: row.name,
+    costPrice: Number(row.cost_price),
+    sellPrice: Number(row.sell_price),
+    type: row.type,
+  }))
 }
 
 export async function updateAddOn(client: DBQueryable, id: number, request: UpdateAddOnRequest): Promise<AddOnResponse> {
