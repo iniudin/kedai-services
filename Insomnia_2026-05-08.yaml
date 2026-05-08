@@ -1,0 +1,276 @@
+type: collection.insomnia.rest/5.0
+schema_version: "5.1"
+name: Kedai POS API
+meta:
+  id: wrk_48515389c277454ebdbe64ef49c4dd8f
+  created: 1778033427687
+  modified: 1778033427687
+  description: "Collection for Kedai POS API testing"
+collection:
+  - url: http://localhost:3000/products
+    name: Create Products - Success
+    meta:
+      id: req_products_create_success
+      created: 1778029855692
+      modified: 1778211987192
+      isPrivate: false
+      sortKey: 100
+    method: POST
+    body:
+      mimeType: application/json
+      text: |
+        {
+          "name": "Es Krim",
+          "costPrice": 10000,
+          "sellPrice": 15000
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+    scripts:
+      afterResponse: |+
+        insomnia.test('Check if status is 201', () => {
+            insomnia.expect(insomnia.response.code).to.eql(201);
+        });
+        const body = JSON.parse(insomnia.response.body);
+        insomnia.environment.set("last_product_id", body.id);
+
+  - url: http://localhost:3000/products
+    name: Create Products - Failed (Missing Price)
+    meta:
+      id: req_products_create_fail
+      created: 1778029855693
+      modified: 1778033527157
+      isPrivate: false
+      sortKey: 200
+    method: POST
+    body:
+      mimeType: application/json
+      text: |
+        {
+          "name": "Es Krim"
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+    scripts:
+      afterResponse: |+
+        insomnia.test('Check if status is 422', () => {
+            insomnia.expect(insomnia.response.code).to.eql(422);
+        });
+
+  - url: http://localhost:3000/products
+    name: List Products
+    meta:
+      id: req_products_list
+      sortKey: 300
+    method: GET
+    scripts:
+      afterResponse: |+
+        insomnia.test('Check if status is 200', () => {
+            insomnia.expect(insomnia.response.code).to.eql(200);
+        });
+
+  - url: http://localhost:3000/add-ons
+    name: Create Add-on - Success
+    meta:
+      id: req_addons_create_success
+      sortKey: 400
+    method: POST
+    body:
+      mimeType: application/json
+      text: |
+        {
+          "name": "Ceres",
+          "costPrice": 1000,
+          "sellPrice": 2000,
+          "type": "topping"
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+    scripts:
+      afterResponse: |+
+        insomnia.test('Check if status is 201', () => {
+            insomnia.expect(insomnia.response.code).to.eql(201);
+        });
+        const body = JSON.parse(insomnia.response.body);
+        insomnia.environment.set("last_addon_id", body.id);
+
+  - url: http://localhost:3000/add-ons
+    name: Create Add-on - Failed (Invalid Type)
+    meta:
+      id: req_addons_create_fail
+      sortKey: 500
+    method: POST
+    body:
+      mimeType: application/json
+      text: |
+        {
+          "name": "Extra Large",
+          "costPrice": 2000,
+          "sellPrice": 5000,
+          "type": "jumbo"
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+    scripts:
+      afterResponse: |+
+        insomnia.test('Check if status is 422', () => {
+            insomnia.expect(insomnia.response.code).to.eql(422);
+        });
+
+  - url: http://localhost:3000/add-ons
+    name: List Add-ons
+    meta:
+      id: req_addons_list
+      sortKey: 600
+    method: GET
+    scripts:
+      afterResponse: |+
+        insomnia.test('Check if status is 200', () => {
+            insomnia.expect(insomnia.response.code).to.eql(200);
+        });
+
+  - url: http://localhost:3000/add-ons/{{ last_addon_id }}
+    name: Update Add-on
+    meta:
+      id: req_addons_update
+      sortKey: 700
+    method: PUT
+    body:
+      mimeType: application/json
+      text: |
+        {
+          "name": "Ceres Meises",
+          "sellPrice": 3000
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+    scripts:
+      afterResponse: |+
+        insomnia.test('Check if status is 200', () => {
+            insomnia.expect(insomnia.response.code).to.eql(200);
+        });
+
+  - url: http://localhost:3000/orders
+    name: Create Order - Success
+    meta:
+      id: req_orders_create_success
+      sortKey: 800
+    method: POST
+    body:
+      mimeType: application/json
+      text: |
+        {
+          "items": [
+            {
+              "productId": {{ last_product_id }},
+              "quantity": 2,
+              "addOnIds": [{{ last_addon_id }}]
+            }
+          ],
+          "amountPaid": 50000
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+    scripts:
+      afterResponse: |+
+        insomnia.test('Check if status is 201', () => {
+            insomnia.expect(insomnia.response.code).to.eql(201);
+        });
+        const body = JSON.parse(insomnia.response.body);
+        insomnia.environment.set("last_order_id", body.id);
+
+  - url: http://localhost:3000/orders
+    name: Create Order - Failed (Insufficient Funds)
+    meta:
+      id: req_orders_create_fail_money
+      sortKey: 900
+    method: POST
+    body:
+      mimeType: application/json
+      text: |
+        {
+          "items": [
+            {
+              "productId": {{ last_product_id }},
+              "quantity": 1
+            }
+          ],
+          "amountPaid": 100
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+    scripts:
+      afterResponse: |+
+        insomnia.test('Check if status is 500 (Insufficient Funds)', () => {
+            insomnia.expect(insomnia.response.code).to.eql(500);
+        });
+
+  - url: http://localhost:3000/orders
+    name: List Orders
+    meta:
+      id: req_orders_list
+      sortKey: 950
+    method: GET
+    scripts:
+      afterResponse: |+
+        insomnia.test('Check if status is 200', () => {
+            insomnia.expect(insomnia.response.code).to.eql(200);
+        });
+
+  - url: http://localhost:3000/orders/{{ last_order_id }}
+    name: Order Detail
+    meta:
+      id: req_orders_detail
+      sortKey: 975
+    method: GET
+    scripts:
+      afterResponse: |+
+        insomnia.test('Check if status is 200', () => {
+            insomnia.expect(insomnia.response.code).to.eql(200);
+        });
+
+  - url: http://localhost:3000/orders/{{ last_order_id }}
+    name: Update Order - Change Amount Paid
+    meta:
+      id: req_orders_update_success
+      sortKey: 1000
+    method: PUT
+    body:
+      mimeType: application/json
+      text: |
+        {
+          "amountPaid": 60000
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+    scripts:
+      afterResponse: |+
+        insomnia.test('Check if status is 200', () => {
+            insomnia.expect(insomnia.response.code).to.eql(200);
+        });
+
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_7d1ccb7a6335408c8324d6637be3f5b6
+    created: 1778029803305
+    modified: 1778211996406
+environments:
+  name: Base Environment
+  meta:
+    id: env_0f2ae828c9764dd3918638d310f02f35
+    created: 1778029803305
+    modified: 1778211996406
+    isPrivate: false
+  data:
+    last_product_id: 0
+    last_addon_id: 0
+    last_order_id: 0

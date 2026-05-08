@@ -12,6 +12,20 @@ docker compose up --build
 - API → http://localhost:3000
 - OpenAPI docs → http://localhost:3000/openapi
 
+## API Documentation & Testing
+
+### OpenAPI / Swagger
+The API documentation is automatically generated and accessible at [http://localhost:3000/openapi](http://localhost:3000/openapi).
+
+### Insomnia
+We provide a pre-configured Insomnia collection for testing. You can import the following file into Insomnia:
+- [Insomnia_2026-05-08.yaml](Insomnia_2026-05-08.yaml)
+
+**Features of the Insomnia collection:**
+- **Automated Workflow**: Automatically saves the ID of newly created products, add-ons, and orders into environment variables.
+- **Test Scripts**: Includes `afterResponse` scripts to verify status codes.
+- **Fail Scenarios**: Includes tests for failure cases (e.g., insufficient funds).
+
 ## Local Development
 
 Prerequisites: **Bun** and **PostgreSQL 18**.
@@ -48,6 +62,7 @@ All variables are defined in `.env` (copy from `.env.example`).
 > Inside Docker Compose, `DATABASE_HOST` is automatically set to `db` (the container name).
 
 ## Database Schema
+You can view the database schema in [ER Diagram](https://dbdiagram.io/d/kedai-69f9a50cddb9320fdcda9d7a).
 
 Migrations live in `migrations/` and are tracked in the `_migrations` table.
 
