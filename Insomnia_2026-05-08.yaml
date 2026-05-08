@@ -1,13 +1,13 @@
 type: collection.insomnia.rest/5.0
-schema_version: "5.1"
+schema_version: '5.1'
 name: Kedai POS API
 meta:
   id: wrk_48515389c277454ebdbe64ef49c4dd8f
   created: 1778033427687
   modified: 1778033427687
-  description: "Collection for Kedai POS API testing"
+  description: Collection for Kedai POS API testing
 collection:
-  - url: http://localhost:3000/products
+  - url: https://kedai.udin.my.id/products
     name: Create Products - Success
     meta:
       id: req_products_create_success
@@ -35,7 +35,7 @@ collection:
         const body = JSON.parse(insomnia.response.body);
         insomnia.environment.set("last_product_id", body.id);
 
-  - url: http://localhost:3000/products
+  - url: https://kedai.udin.my.id/products
     name: Create Products - Failed (Missing Price)
     meta:
       id: req_products_create_fail
@@ -59,7 +59,7 @@ collection:
             insomnia.expect(insomnia.response.code).to.eql(422);
         });
 
-  - url: http://localhost:3000/products
+  - url: https://kedai.udin.my.id/products
     name: List Products
     meta:
       id: req_products_list
@@ -71,7 +71,7 @@ collection:
             insomnia.expect(insomnia.response.code).to.eql(200);
         });
 
-  - url: http://localhost:3000/add-ons
+  - url: https://kedai.udin.my.id/add-ons
     name: Create Add-on - Success
     meta:
       id: req_addons_create_success
@@ -97,7 +97,7 @@ collection:
         const body = JSON.parse(insomnia.response.body);
         insomnia.environment.set("last_addon_id", body.id);
 
-  - url: http://localhost:3000/add-ons
+  - url: https://kedai.udin.my.id/add-ons
     name: Create Add-on - Failed (Invalid Type)
     meta:
       id: req_addons_create_fail
@@ -121,7 +121,7 @@ collection:
             insomnia.expect(insomnia.response.code).to.eql(422);
         });
 
-  - url: http://localhost:3000/add-ons
+  - url: https://kedai.udin.my.id/add-ons
     name: List Add-ons
     meta:
       id: req_addons_list
@@ -133,7 +133,7 @@ collection:
             insomnia.expect(insomnia.response.code).to.eql(200);
         });
 
-  - url: http://localhost:3000/add-ons/{{ last_addon_id }}
+  - url: https://kedai.udin.my.id/add-ons/{{ last_addon_id }}
     name: Update Add-on
     meta:
       id: req_addons_update
@@ -155,7 +155,7 @@ collection:
             insomnia.expect(insomnia.response.code).to.eql(200);
         });
 
-  - url: http://localhost:3000/orders
+  - url: https://kedai.udin.my.id/orders
     name: Create Order - Success
     meta:
       id: req_orders_create_success
@@ -185,7 +185,7 @@ collection:
         const body = JSON.parse(insomnia.response.body);
         insomnia.environment.set("last_order_id", body.id);
 
-  - url: http://localhost:3000/orders
+  - url: https://kedai.udin.my.id/orders
     name: Create Order - Failed (Insufficient Funds)
     meta:
       id: req_orders_create_fail_money
@@ -212,7 +212,7 @@ collection:
             insomnia.expect(insomnia.response.code).to.eql(500);
         });
 
-  - url: http://localhost:3000/orders
+  - url: https://kedai.udin.my.id/orders
     name: List Orders
     meta:
       id: req_orders_list
@@ -224,7 +224,7 @@ collection:
             insomnia.expect(insomnia.response.code).to.eql(200);
         });
 
-  - url: http://localhost:3000/orders/{{ last_order_id }}
+  - url: https://kedai.udin.my.id/orders/{{ last_order_id }}
     name: Order Detail
     meta:
       id: req_orders_detail
@@ -236,7 +236,7 @@ collection:
             insomnia.expect(insomnia.response.code).to.eql(200);
         });
 
-  - url: http://localhost:3000/orders/{{ last_order_id }}
+  - url: https://kedai.udin.my.id/orders/{{ last_order_id }}
     name: Update Order - Change Amount Paid
     meta:
       id: req_orders_update_success
@@ -257,7 +257,7 @@ collection:
             insomnia.expect(insomnia.response.code).to.eql(200);
         });
 
-  - url: http://localhost:3000/reports/sales?grouping=THIS_WEEK
+  - url: https://kedai.udin.my.id/reports/sales?grouping=THIS_WEEK
     name: Sales Report (Dashboard)
     meta:
       id: req_reports_sales
@@ -269,7 +269,7 @@ collection:
             insomnia.expect(insomnia.response.code).to.eql(200);
         });
 
-  - url: http://localhost:3000/reports/ranks?startDate=2026-05-01&endDate=2026-05-31
+  - url: https://kedai.udin.my.id/reports/ranks?startDate=2026-05-01&endDate=2026-05-31
     name: Product Ranks Report
     meta:
       id: req_reports_ranks

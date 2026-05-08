@@ -19,13 +19,13 @@ docker compose run --rm migrate sh -c "bun install && bun run db:seed"
 
 ## Deployed (Temporary)
 
-- http://43.133.157.135:3000
-- OpenAPI docs → http://43.133.157.135:3000/openapi
+- https://kedai.udin.my.id
+- OpenAPI docs → https://kedai.udin.my.id/openapi
 
 ## API Documentation & Testing
 
 ### OpenAPI / Swagger
-The API documentation is automatically generated and accessible at [http://localhost:3000/openapi](http://localhost:3000/openapi).
+The API documentation is automatically generated and accessible at [https://kedai.udin.my.id/openapi](https://kedai.udin.my.id/openapi).
 
 ### Insomnia
 We provide a pre-configured Insomnia collection for testing. You can import the following file into Insomnia:
