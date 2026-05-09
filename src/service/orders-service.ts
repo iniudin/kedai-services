@@ -125,23 +125,25 @@ export async function updateOrder(id: number, request: UpdateOrderRequest): Prom
   let totalNetProfit = Number(existingOrder.total_net_profit)
   const amountPaid = request.amountPaid ?? Number(existingOrder.amount_paid)
 
+  let resolvedItems
+
+  if (request.items && request.items.length > 0) {
+    resolvedItems = await resolveOrderItems(db, request.items)
+    totalRevenue = resolvedItems.totalSellPrice
+    totalNetProfit = resolvedItems.totalSellPrice - resolvedItems.totalCostPrice
+  }
+
+  if (amountPaid < totalRevenue) {
+    throw new Error(`Not enough money! Total: ${totalRevenue}, Paid: ${amountPaid}`)
+  }
+
+  const amountChange = amountPaid - totalRevenue
+
   try {
     await db.query('BEGIN')
 
-    if (request.items && request.items.length > 0) {
-      const {
-        productMap,
-        addOnMap,
-        totalSellPrice,
-        totalCostPrice,
-      } = await resolveOrderItems(db, request.items)
-
-      totalRevenue = totalSellPrice
-      totalNetProfit = totalSellPrice - totalCostPrice
-
-      if (amountPaid < totalRevenue) {
-        throw new Error(`Not enough money! Total: ${totalRevenue}, Paid: ${amountPaid}`)
-      }
+    if (request.items && request.items.length > 0 && resolvedItems) {
+      const { productMap, addOnMap } = resolvedItems
 
       await ordersRepository.deleteOrderItemsByOrderId(db, id)
 
@@ -180,8 +182,6 @@ export async function updateOrder(id: number, request: UpdateOrderRequest): Prom
         })
       }))
     }
-
-    const amountChange = amountPaid - totalRevenue
 
     const order = await ordersRepository.updateOrder(db, id, {
       totalRevenue,
